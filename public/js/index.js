@@ -7,13 +7,13 @@ socket.on('disconnect', function() {// arrow function is not used as it mite not
     console.log('disconnected from server');
 });
 
-socket.on('newMessage',function(data) {
+socket.on('newMessage',(data) => {
     const li = $('<li></li>');
     li.text(`${data.from} :  ${data.text}`);
     $('#messages').append(li);
 });
 
-$('#messages').on('submit', function(e) {
+$('#messages').on('submit', (e) => {
     e.preventDefault();
     socket.emit('createMessage', {
         from: 'VG',
