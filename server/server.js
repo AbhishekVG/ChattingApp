@@ -13,11 +13,28 @@ const io = socketIO(server)
 io.on('connection', (socket) => {
     console.log("New user connected");
 
+    socket.emit('newMessage', {
+        from: 'Admin',
+        text: 'Welcome to the Chatting App',
+        createdAt: new Date().getTime()
+    })
+
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'Abhishek joined',
+        createdAt: new Date().getTime()
+    })
+
     socket.on('createMessage', (data) => {
-        io.emit('newMessage', {
+        // io.emit('newMessage', {
+        //     from: data.from,
+        //     text: data.text,
+        //     craetedAt: new Date().getTime()
+        // })
+        socket.broadcast.emit('newMessage', {
             from: data.from,
             text: data.text,
-            craetedAt: new Date().getTime()
+            createdAt: new Date().getTime()
         })
         console.log("createMessage", data);
     })
