@@ -1,8 +1,8 @@
 const socket = io();
 socket.on('connect', function() {
     console.log('connected to the server');
-    socket.emit('createEmail', {
-        to: 'luffy@op.com',
+    socket.emit('createMessage', {
+        to: 'luffY@op.com',
         createdAt: 32253456456,
         text: 'hi luffy'
     })
@@ -12,6 +12,6 @@ socket.on('disconnect', function() {// arrow function is not used as it mite not
     console.log('disconnected from server');
 });
 
-socket.on('newEmail',function(data) {
-    console.log('newEmail', data)
+socket.on('newMessage',function(data) {
+    console.log('newMessage', data)
 });
