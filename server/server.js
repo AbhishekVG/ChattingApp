@@ -8,35 +8,26 @@ const publicPath = path.join(__dirname, '../public');  //path join resolves the 
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 app.use(express.static(publicPath));
-const io = socketIO(server)
+const io = socketIO(server);
+
+const { generateMessage } = require('./utils/message');
 
 io.on('connection', (socket) => {
     console.log("New user connected");
 
-    socket.emit('newMessage', {
-        from: 'Admin',
-        text: 'Welcome to the Chatting App',
-        createdAt: new Date().getTime()
-    })
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the Chatting app'))
 
-    socket.broadcast.emit('newMessage', {
-        from: 'Admin',
-        text: 'Abhishek joined',
-        createdAt: new Date().getTime()
-    })
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'Abhishek joined'))
 
-    socket.on('createMessage', (data) => {
+    socket.on('createMessage', (data, callBack) => {
         // io.emit('newMessage', {
         //     from: data.from,
         //     text: data.text,
         //     craetedAt: new Date().getTime()
         // })
-        socket.broadcast.emit('newMessage', {
-            from: data.from,
-            text: data.text,
-            createdAt: new Date().getTime()
-        })
+        socket.broadcast.emit('newMessage', generateMessage(data.from, data.text));
         console.log("createMessage", data);
+        callBack('This is from the server.');
     })
 
     socket.on('disconnect', () => {

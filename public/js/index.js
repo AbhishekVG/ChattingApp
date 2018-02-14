@@ -8,5 +8,17 @@ socket.on('disconnect', function() {// arrow function is not used as it mite not
 });
 
 socket.on('newMessage',function(data) {
-    console.log('newMessage', data)
+    const li = $('<li></li>');
+    li.text(`${data.from} :  ${data.text}`);
+    $('#messages').append(li);
 });
+
+$('#messages').on('submit', function(e) {
+    e.preventDefault();
+    socket.emit('createMessage', {
+        from: 'VG',
+        text: $('[name=msg]').val()
+    }, function(){
+        console.log('Message sent')
+    })
+})

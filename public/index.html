@@ -4,13 +4,17 @@
 <head>
     <title>Chatting app</title>
     <meta charset="utf-8">
+    <script src="/js/lib/jquery-3.3.1.min.js"></script>
     <!-- <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="styleSheet.css"/> -->
 </head>
 
 <body>
     <h1>Welcome to chatting app</h1>
-    
+    <form id="messages">
+        <input type='text' placeholder="enter your message" name='msg'/>
+        <button type='submit'>Send</button>
+    </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/index.js"></script>
 </body>
