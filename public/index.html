@@ -4,10 +4,23 @@
 <head>
     <title>Page Title</title>
     <meta charset="utf-8">
+    <!-- <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="styleSheet.css"/> -->
 </head>
 
 <body>
     <h1>Welcome to chatting app</h1>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+       const socket = io();
+       socket.on('connect', () => {
+           console.log('connected to the server');
+       })
+       socket.on('disconnect', () => {
+           console.log('disconnected from server');
+       })
+    </script>
 </body>
 
 </html>
