@@ -17,19 +17,25 @@ const { generateMessage, generateLocationMessage } = require('./utils/message');
 io.on('connection', (socket) => {
     console.log("New user connected");
 
-    socket.on('createMessage', (data, callBack) => {
+    socket.on('createMessage', (message, callBack) => {
         // io.emit('newMessage', {
         //     from: data.from,
         //     text: data.text,
         //     craetedAt: new Date().getTime()
         // })
-        io.emit('newMessage', generateMessage(data.from, data.text));
+        const user = users.getUser(socket.id);
+        if(user && isString(message.text)) {
+            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+        }
         console.log("createMessage", data);
         callBack('This is from the server.');
     })
 
     socket.on('fetchLocation', (coords, callBack) => {
-        io.emit('displayLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+        const user = users.getUser(socket.id);
+        if(user){
+           io.to(user.room).emit('displayLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
         callBack("from the server: 200");
     })
 

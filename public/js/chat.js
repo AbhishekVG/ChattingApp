@@ -16,8 +16,14 @@ function scrollToBottom() {
     }
 }
 
-socket.on('updateUsersList', function(data){
-    console.log('update',data)
+socket.on('updateUsersList', function(users){
+    var ol = $("<ol></ol>");
+
+    users.forEach(function(user){
+        ol.append($('<li></li>').text(user))
+    })
+
+    $('#users').html(ol);
 })
 
 socket.on('connect', function () {
@@ -64,7 +70,6 @@ socket.on('displayLocationMessage', function (data) {
 $('#message-form').on('submit', function (e) {
     e.preventDefault();
     socket.emit('createMessage', {
-        from: 'VG',
         text: $('[name=msg]').val()
     }, function () {
         $('[name=msg]').val('');
