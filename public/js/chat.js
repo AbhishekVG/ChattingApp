@@ -16,8 +16,21 @@ function scrollToBottom() {
     }
 }
 
+socket.on('updateUsersList', function(data){
+    console.log('update',data)
+})
+
 socket.on('connect', function () {
     console.log('connected to the server');
+    const params = $.deparam(location.search);
+    socket.emit('join', params, function(err){
+        if(err) {
+            alert(err);
+            location.href = '/';
+        } else {
+            console.log('ChatRoom entered')
+        }
+    })
 });
 
 socket.on('disconnect', function () {// arrow function is not used as it mite not work in safari mobiles etc

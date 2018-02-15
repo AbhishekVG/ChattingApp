@@ -9,15 +9,13 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 app.use(express.static(publicPath));
 const io = socketIO(server);
-
+const { isString } = require('./utils/validation');
+const { Users } = require('./utils/users');
+const users = new Users();
 const { generateMessage, generateLocationMessage } = require('./utils/message');
 
 io.on('connection', (socket) => {
     console.log("New user connected");
-
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the Chatting app'))
-
-    socket.broadcast.emit('newMessage', generateMessage('Admin', 'Abhishek joined'))
 
     socket.on('createMessage', (data, callBack) => {
         // io.emit('newMessage', {
@@ -34,9 +32,29 @@ io.on('connection', (socket) => {
         io.emit('displayLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
         callBack("from the server: 200");
     })
-    
+
+    socket.on('join', (data, callBack) => {
+        if (!isString(data.name) || !isString(data.room)) {
+            return callBack('Invalid user or room name')
+        }
+        socket.join(data.room);
+        //socket.leave('same name')
+        console.log('----->',users.removeUser(socket.id));
+        users.addUser(socket.id, data.name, data.room);
+        io.to(data.room).emit('updateUsersList', users.getUserList(data.room))
+        console.log('server side', socket.id); //explore socket
+        socket.broadcast.to(data.room).emit('newMessage', generateMessage('Admin', `${data.name} joined`))
+        socket.emit('newMessage', generateMessage('Admin', 'Welcome to the Chatting app'))
+        callBack();
+    });
+
     socket.on('disconnect', () => {
         console.log("disconnected from the client");
+        const user = users.removeUser(socket.id);
+        if(user) {
+            io.to(user.room).emit('updateUsersList', users.getUserList(user.room));
+            io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left`))
+        }
     })
 })
 
