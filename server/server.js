@@ -10,7 +10,7 @@ const server = http.createServer(app);
 app.use(express.static(publicPath));
 const io = socketIO(server);
 
-const { generateMessage } = require('./utils/message');
+const { generateMessage, generateLocationMessage } = require('./utils/message');
 
 io.on('connection', (socket) => {
     console.log("New user connected");
@@ -30,6 +30,11 @@ io.on('connection', (socket) => {
         callBack('This is from the server.');
     })
 
+    socket.on('fetchLocation', (coords, callBack) => {
+        io.emit('displayLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+        callBack("from the server: 200");
+    })
+    
     socket.on('disconnect', () => {
         console.log("disconnected from the client");
     })

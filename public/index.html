@@ -5,16 +5,56 @@
     <title>Chatting app</title>
     <meta charset="utf-8">
     <script src="/js/lib/jquery-3.3.1.min.js"></script>
+    <script src="/js/lib/moment.js"></script>
+    <script src="/js/lib/mustache.js"></script>
     <!-- <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="styleSheet.css"/> -->
+        <link rel="stylesheet" href="styleSheet.css"/> -->
+    <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<body>
-    <h1>Welcome to chatting app</h1>
-    <form id="messages">
-        <input type='text' placeholder="enter your message" name='msg'/>
-        <button type='submit'>Send</button>
-    </form>
+<body class='chat'>
+
+    <div class="chat__sidebar">
+        <h3>People</h3>
+        <div id='users'></div>
+    </div>
+
+    <div class="chat__main">
+        <ul id="messages" class="chat__messages"></ul>
+
+        <div class="chat__footer">
+            <form id="message-form">
+                <input type='text' placeholder="enter your message" name='msg' autofocus=false autocomplete="off" />
+                <button type='submit'>Send</button>
+                <button id="share-location">Send location</button>
+            </form>
+        </div>
+    </div>
+
+    <script id="message-template" type="text/template">
+        <li class='message'>
+            <div class="message__title">
+                <h4>{{from}}</h4>
+                <span>{{createdAt}}</span>
+            </div>
+            <div class="message__body">
+                <p>{{text}}</p>
+            </div>
+        </li>
+    </script>
+    
+    <script id="location-message-template" type="text/template">
+        <li class='message'>
+            <div class="message__title">
+                <h4>{{from}}</h4>
+                <span>{{createdAt}}</span>
+            </div>
+            <div class="message__body">
+                <a href={{url}} target='_blank'>Location</a>
+            </div>
+        </li>
+    </script>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/index.js"></script>
 </body>
